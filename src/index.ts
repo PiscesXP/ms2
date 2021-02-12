@@ -1,1 +1,3 @@
-console.log("hello mc2.");
+import { startHttpServer } from "./server";
+
+startHttpServer();
