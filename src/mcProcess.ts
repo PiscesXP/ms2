@@ -11,6 +11,7 @@ enum IOType {
 }
 
 type IODataItem = {
+  index: number;
   type: IOType;
   data: string;
   time: Date;
@@ -55,6 +56,7 @@ class IODataPool {
 class ProcessData {
   isRunning = false;
   dataPool: IODataPool = new IODataPool();
+  indexCounter = 0;
 
   appendStdin(data: string) {
     this.append(data, IOType.stdin);
@@ -69,7 +71,9 @@ class ProcessData {
   }
 
   append(data: string, type: IOType) {
+    const index = ++this.indexCounter;
     this.dataPool.append({
+      index,
       data,
       type,
       time: new Date(),
@@ -114,7 +118,7 @@ process.on("SIGINT", () => {
 //----------------------------------------------------------------------------------------------------------------------
 
 export const getStdout = () => {
-  return processData.dataPool.getStdout();
+  return processData.dataPool.getAll();
 };
 
 export const sendToStdin = (data: string) => {
