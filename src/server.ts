@@ -2,7 +2,13 @@ import { config } from "./config";
 import * as express from "express";
 import * as cookieParser from "cookie-parser";
 
-import { getStdout, sendToStdin } from "./mcProcess";
+import {
+  backup,
+  getBackupList,
+  getStdout,
+  rollback,
+  sendToStdin,
+} from "./mcProcess";
 
 const server = express();
 
@@ -78,6 +84,34 @@ server.post("/mc/stdin", (req, res) => {
   });
 });
 
+server.post("/mc/backup", (req, res) => {
+  backup().then((version) => {
+    res.send({
+      result: "ok",
+      version,
+    });
+  });
+});
+server.get("/mc/backup", (req, res) => {
+  res.send({
+    backups: getBackupList(),
+  });
+});
+
+server.post("/mc/rollback", (req, res) => {
+  const backupName = req?.body?.backupName;
+  rollback(backupName)
+    .then(() => {
+      res.send({
+        result: "ok",
+      });
+    })
+    .catch((error) => {
+      res.send({
+        result: "fail",
+      });
+    });
+});
 export const startHttpServer = () => {
   server.listen(config.server.port, () => {
     console.log("Http server started.");
