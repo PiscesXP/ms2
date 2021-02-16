@@ -87,6 +87,8 @@ const processData = new ProcessData();
 
 //----------------------------------------------------------------------------------------------------------------------
 
+let runningFlag = false;
+
 function startMinecraftServer() {
   console.log("starting minecraft server...");
   const _mcp = spawn(config.mc.path, {
@@ -100,28 +102,32 @@ function startMinecraftServer() {
   });
   _mcp.on("exit", () => {
     console.log("exit");
+    runningFlag = false;
   });
   _mcp.on("close", () => {
     console.log("close");
+    runningFlag = false;
   });
   _mcp.on("error", (e) => {
     console.log("error", e);
+    runningFlag = false;
   });
   console.log("minecraft server started");
+  runningFlag = true;
+
+  //listen Ctrl-C
+  process.on("SIGINT", () => {
+    console.log("stopping mc server...");
+    _mcp.on("exit", () => {
+      console.log("mc server stopped.");
+      process.exit(0);
+    });
+    _mcp.stdin.write("stop\n");
+  });
   return _mcp;
 }
 
 let mcProcess = startMinecraftServer();
-
-//listen Ctrl-C
-process.on("SIGINT", () => {
-  console.log("stopping mc server...");
-  mcProcess.on("exit", () => {
-    console.log("mc server stopped.");
-    process.exit(0);
-  });
-  mcProcess.stdin.write("stop\n");
-});
 
 //----------------------------------------------------------------------------------------------------------------------
 
@@ -200,5 +206,26 @@ export const rollback = (backupName: string) =>
         );
       });
       mcProcess.stdin.write("stop\n");
+    }
+  });
+
+// 检查服务器运行状态
+export const checkStatus = () => {
+  return runningFlag;
+}
+
+// 重启服务器
+// 设置force参数可以强制重启
+export const restartServer = (force = false) =>
+  new Promise<void>((resolve, reject) => {
+    if (!(!force && runningFlag)) {
+      mcProcess = startMinecraftServer();
+      if (runningFlag) {
+        resolve();
+      } else {
+        reject("Server restart failed!");
+      }
+    } else {
+      reject("Server doesn't need to restart");
     }
   });

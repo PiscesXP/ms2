@@ -8,6 +8,8 @@ import {
   getStdout,
   rollback,
   sendToStdin,
+  checkStatus,
+  restartServer
 } from "./mcProcess";
 
 const server = express();
@@ -112,6 +114,28 @@ server.post("/mc/rollback", (req, res) => {
       });
     });
 });
+
+server.get("/mc/status", (req, res) => {
+  res.send({
+    status: checkStatus(),
+  })
+});
+
+server.post("/mc/restart", (req, res) => {
+  restartServer()
+    .then(() => {
+      res.send({
+        result: "ok",
+      });
+    })
+    .catch((error) => {
+      res.send({
+        result: "fail",
+        msg: error
+      });
+    });
+});
+
 export const startHttpServer = () => {
   server.listen(config.server.port, () => {
     console.log("Http server started.");
