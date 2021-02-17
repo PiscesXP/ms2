@@ -8,7 +8,7 @@ import {
   restartServer,
   rollback,
   sendToStdin,
-} from "../minecraft/mcProcess";
+} from "../minecraft";
 import { formatResponse, ResponseCode } from "./format";
 
 server.get("/validate", (req, res) => {
