@@ -36,12 +36,16 @@ function startMinecraftServer() {
 
   //listen Ctrl-C
   process.on("SIGINT", () => {
-    console.log("stopping mc server...");
-    _mcp.on("exit", () => {
-      console.log("mc server stopped.");
+    if (processData.isRunning()) {
+      console.log("stopping mc server...");
+      _mcp.on("exit", () => {
+        console.log("mc server stopped.");
+        process.exit(0);
+      });
+      _mcp.stdin.write("stop\n");
+    } else {
       process.exit(0);
-    });
-    _mcp.stdin.write("stop\n");
+    }
   });
   return _mcp;
 }
