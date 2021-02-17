@@ -6,6 +6,12 @@ enum IOType {
   stderr = "stderr",
 }
 
+export enum RunningFlag {
+  RUNNING = "running",
+  STOPPED = "stopped",
+  EXITED = "exited",
+}
+
 type IODataItem = {
   index: number;
   type: IOType;
@@ -50,9 +56,13 @@ class IODataPool {
 }
 
 class ProcessData {
-  isRunning = false;
+  runningFlag: RunningFlag = RunningFlag.STOPPED;
   dataPool: IODataPool = new IODataPool();
   indexCounter = 0;
+
+  isRunning() {
+    return this.runningFlag === RunningFlag.RUNNING;
+  }
 
   appendStdin(data: string) {
     this.append(data, IOType.stdin);

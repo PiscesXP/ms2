@@ -3,12 +3,11 @@ import { config } from "../config";
 import { dateToText } from "../time";
 import { ncp } from "ncp";
 import * as fs from "fs";
-import { processData } from "./status";
-
-let runningFlag = false;
+import { processData, RunningFlag } from "./status";
 
 function startMinecraftServer() {
   console.log("starting minecraft server...");
+  //TODO 从命令行启动mc，因为linux下需要pwd为mc根目录
   const _mcp = spawn(config.mc.path, {
     detached: true,
   });
@@ -20,18 +19,19 @@ function startMinecraftServer() {
   });
   _mcp.on("exit", () => {
     console.log("exit");
-    runningFlag = false;
+    //异常退出(?)
+    processData.runningFlag = RunningFlag.STOPPED;
   });
   _mcp.on("close", () => {
     console.log("close");
-    runningFlag = false;
+    processData.runningFlag = RunningFlag.STOPPED;
   });
   _mcp.on("error", (e) => {
     console.log("error", e);
-    runningFlag = false;
+    processData.runningFlag = RunningFlag.EXITED;
   });
   console.log("minecraft server started");
-  runningFlag = true;
+  processData.runningFlag = RunningFlag.RUNNING;
 
   //listen Ctrl-C
   process.on("SIGINT", () => {
@@ -129,16 +129,16 @@ export const rollback = (backupName: string) =>
 
 // 检查服务器运行状态
 export const checkStatus = () => {
-  return runningFlag;
+  return processData.runningFlag;
 };
 
 // 重启服务器
 // 设置force参数可以强制重启
 export const restartServer = (force = false) =>
   new Promise<void>((resolve, reject) => {
-    if (!(!force && runningFlag)) {
+    if (!(!force && processData.isRunning())) {
       mcProcess = startMinecraftServer();
-      if (runningFlag) {
+      if (processData.isRunning()) {
         resolve();
       } else {
         reject("Server restart failed!");
