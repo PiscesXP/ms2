@@ -136,7 +136,7 @@ export const checkStatus = () => {
 // 设置force参数可以强制重启
 export const restartServer = (force = false) =>
   new Promise<void>((resolve, reject) => {
-    if (!(!force && processData.isRunning())) {
+    if (force || !processData.isRunning()) {
       mcProcess = startMinecraftServer();
       if (processData.isRunning()) {
         resolve();
