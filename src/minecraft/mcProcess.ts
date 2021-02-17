@@ -7,9 +7,10 @@ import { processData, RunningFlag } from "./status";
 
 function startMinecraftServer() {
   console.log("starting minecraft server...");
-  //TODO 从命令行启动mc，因为linux下需要pwd为mc根目录
   const _mcp = spawn(config.mc.path, {
     detached: true,
+    //linux下需要设置工作目录为mc根目录
+    cwd: config.mc.cwd,
   });
   _mcp.stdout.on("data", (data: Buffer) => {
     processData.appendStdout(data.toString());
