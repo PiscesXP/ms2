@@ -5,6 +5,8 @@ import { ncp } from "ncp";
 import * as fs from "fs";
 import { processData, RunningFlag } from "./status";
 
+const { worlds: worldsDir, levelName } = config.mc;
+
 function startMinecraftServer() {
   console.log("starting minecraft server...");
   const _mcp = spawn(config.mc.path, {
@@ -68,11 +70,11 @@ export const backup = () =>
     console.log("backup...");
     mcProcess.on("close", () => {
       const datePostfix = dateToText(new Date()).toString().replace(":", "-");
-      const backupName = `${config.mc.levelName}-${datePostfix}`;
+      const backupName = `${levelName}-${datePostfix}`;
 
       ncp(
-        `${config.mc.worlds}${config.mc.levelName}`,
-        `${config.mc.worlds}${backupName}`,
+        `${worldsDir}/${levelName}`,
+        `${worldsDir}/${backupName}`,
         (error) => {
           if (error) {
             console.log(`backup error:${error}`);
@@ -88,12 +90,11 @@ export const backup = () =>
   });
 
 export const getBackupList = () => {
-  return fs.readdirSync(`${config.mc.worlds}`);
+  return fs.readdirSync(`${worldsDir}`);
 };
 
 export const rollback = (backupName: string) =>
   new Promise<void>((resolve, reject) => {
-    const { worlds: worldsDir, levelName } = config.mc;
     if (fs.readdirSync(`${worldsDir}`).includes(backupName)) {
       mcProcess.on("close", () => {
         //save current game
