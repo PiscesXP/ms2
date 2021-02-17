@@ -1,6 +1,7 @@
 import { config } from "../config";
 import * as express from "express";
 import * as cookieParser from "cookie-parser";
+import { setupRouters } from "./router";
 
 const server = express();
 
@@ -19,7 +20,7 @@ server.use("*", (req, res, next) => {
 server.use(express.json());
 server.use(cookieParser());
 
-export { server };
+setupRouters(server);
 
 export const startHttpServer = () => {
   server.listen(config.server.port, () => {
