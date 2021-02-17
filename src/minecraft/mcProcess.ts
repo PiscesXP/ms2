@@ -1,6 +1,6 @@
 import { spawn } from "child_process";
-import { config } from "./config";
-import { dateToText } from "./time";
+import { config } from "../config";
+import { dateToText } from "../time";
 import { ncp } from "ncp";
 import * as fs from "fs";
 
@@ -212,7 +212,7 @@ export const rollback = (backupName: string) =>
 // 检查服务器运行状态
 export const checkStatus = () => {
   return runningFlag;
-}
+};
 
 // 重启服务器
 // 设置force参数可以强制重启

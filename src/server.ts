@@ -9,8 +9,8 @@ import {
   rollback,
   sendToStdin,
   checkStatus,
-  restartServer
-} from "./mcProcess";
+  restartServer,
+} from "./minecraft/mcProcess";
 
 const server = express();
 
@@ -118,7 +118,7 @@ server.post("/mc/rollback", (req, res) => {
 server.get("/mc/status", (req, res) => {
   res.send({
     status: checkStatus(),
-  })
+  });
 });
 
 server.post("/mc/restart", (req, res) => {
@@ -131,7 +131,7 @@ server.post("/mc/restart", (req, res) => {
     .catch((error) => {
       res.send({
         result: "fail",
-        msg: error
+        msg: error,
       });
     });
 });
