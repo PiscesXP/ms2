@@ -89,25 +89,26 @@ export const getBackupList = () => {
 
 export const rollback = (backupName: string) =>
   new Promise<void>((resolve, reject) => {
-    if (fs.readdirSync(`${config.mc.worlds}`).includes(backupName)) {
+    const { worlds: worldsDir, levelName } = config.mc;
+    if (fs.readdirSync(`${worldsDir}`).includes(backupName)) {
       mcProcess.on("close", () => {
         //save current game
         ncp(
-          `${config.mc.worlds}${config.mc.levelName}`,
-          `${config.mc.worlds}${config.mc.levelName}.old`,
+          `${worldsDir}/${levelName}`,
+          `${worldsDir}/${levelName}.old`,
           (error) => {
             if (error) {
               console.log(`error while rollback:${error}`);
               reject(error);
             } else {
               //remove old game
-              fs.rmSync(`${config.mc.worlds}${config.mc.levelName}`, {
+              fs.rmSync(`${worldsDir}/${levelName}`, {
                 recursive: true,
               });
               //copy backup version
               ncp(
-                `${config.mc.worlds}${backupName}`,
-                `${config.mc.worlds}${config.mc.levelName}`,
+                `${worldsDir}/${backupName}`,
+                `${worldsDir}/${levelName}`,
 
                 (error) => {
                   if (error) {
