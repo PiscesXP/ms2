@@ -124,7 +124,8 @@ export const setupRouters = (server: Express) => {
   });
 
   server.post("/mc/restart", (req, res) => {
-    restartServer()
+    const force = !!req.body?.force;
+    restartServer(force)
       .then(() => {
         res.send(formatResponse());
       })
