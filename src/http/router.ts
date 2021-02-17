@@ -9,29 +9,35 @@ import {
   rollback,
   sendToStdin,
 } from "../minecraft/mcProcess";
+import { formatResponse, ResponseCode } from "./format";
 
-server.get("/validate", (req, res, next) => {
+server.get("/validate", (req, res) => {
   if (req?.cookies?.token === config.server.token) {
-    return res.send({
-      result: "ok",
-    });
+    return res.send(formatResponse());
   } else {
-    return res.send({
-      result: "invalid",
-    });
+    return res.send(
+      formatResponse({
+        code: ResponseCode.authInvalid,
+        message: "请先验证身份.",
+      })
+    );
   }
 });
 
 server.post("/validate", (req, res) => {
   if (req?.body?.token === config.server.token) {
     res.cookie("token", config.server.token);
-    res.send({
-      result: "ok",
-    });
+    res.send(
+      formatResponse({
+        message: "身份验证成功.",
+      })
+    );
   } else {
-    res.send({
-      result: "invalid",
-    });
+    res.send(
+      formatResponse({
+        message: "身份验证失败.",
+      })
+    );
   }
 });
 
@@ -39,9 +45,12 @@ server.use("/mc", (req, res, next) => {
   if (req?.cookies?.token === config.server.token) {
     return next();
   } else {
-    res.send({
-      result: "invalid",
-    });
+    res.send(
+      formatResponse({
+        code: ResponseCode.authInvalid,
+        message: "请先验证身份.",
+      })
+    );
   }
 });
 
@@ -52,9 +61,13 @@ server.get("/mc/stdout", (req, res) => {
     },
     ""
   );*/
-  return res.send({
-    stdout: getStdout(),
-  });
+  return res.send(
+    formatResponse({
+      data: {
+        stdout: getStdout(),
+      },
+    })
+  );
 });
 
 server.post("/mc/stdin", (req, res) => {
@@ -62,57 +75,66 @@ server.post("/mc/stdin", (req, res) => {
   if (toSend) {
     sendToStdin(toSend);
   }
-  res.send({
-    result: "ok",
-  });
+  res.send(formatResponse());
 });
 
 server.post("/mc/backup", (req, res) => {
   backup().then((version) => {
-    res.send({
-      result: "ok",
-      version,
-    });
+    res.send(
+      formatResponse({
+        data: {
+          version,
+        },
+      })
+    );
   });
 });
 server.get("/mc/backup", (req, res) => {
-  res.send({
-    backups: getBackupList(),
-  });
+  res.send(
+    formatResponse({
+      data: {
+        backups: getBackupList(),
+      },
+    })
+  );
 });
 
 server.post("/mc/rollback", (req, res) => {
   const backupName = req?.body?.backupName;
   rollback(backupName)
     .then(() => {
-      res.send({
-        result: "ok",
-      });
+      res.send(formatResponse());
     })
     .catch((error) => {
-      res.send({
-        result: "fail",
-      });
+      res.send(
+        formatResponse({ code: ResponseCode.backupFailed, data: error })
+      );
     });
 });
 
 server.get("/mc/status", (req, res) => {
-  res.send({
-    status: checkStatus(),
-  });
+  res.send(
+    formatResponse({
+      data: {
+        status: checkStatus(),
+      },
+    })
+  );
 });
 
 server.post("/mc/restart", (req, res) => {
   restartServer()
     .then(() => {
-      res.send({
-        result: "ok",
-      });
+      res.send(formatResponse());
     })
     .catch((error) => {
-      res.send({
-        result: "fail",
-        msg: error,
-      });
+      res.send(
+        formatResponse({
+          code: ResponseCode.restartFailed,
+          data: {
+            msg: error,
+          },
+        })
+      );
     });
 });
