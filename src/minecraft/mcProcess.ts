@@ -65,6 +65,10 @@ export const sendToStdin = (data: string) => {
   mcProcess.stdin.write(data + "\n");
 };
 
+/**
+ * 备份存档.
+ * @return 存档名称.
+ * */
 export const backup = () =>
   new Promise<string>((resolve, reject) => {
     console.log("backup...");
@@ -78,60 +82,70 @@ export const backup = () =>
         (error) => {
           if (error) {
             console.log(`backup error:${error}`);
+            reject(error.toString());
           } else {
             console.log("backup success.");
             resolve(backupName);
-            mcProcess = startMinecraftServer();
           }
+          //重启mc
+          mcProcess = startMinecraftServer();
         }
       );
     });
     mcProcess.stdin.write("stop\n");
   });
 
+/**
+ * 获取所有备份存档.
+ * @return 存档名
+ * */
 export const getBackupList = () => {
-  return fs.readdirSync(`${worldsDir}`);
+  return fs.readdirSync(`${worldsDir}`).filter((value) => value !== levelName);
 };
 
+/**
+ * 回滚存档.
+ * */
 export const rollback = (backupName: string) =>
   new Promise<void>((resolve, reject) => {
-    if (fs.readdirSync(`${worldsDir}`).includes(backupName)) {
-      mcProcess.on("close", () => {
-        //save current game
-        ncp(
-          `${worldsDir}/${levelName}`,
-          `${worldsDir}/${levelName}.old`,
-          (error) => {
-            if (error) {
-              console.log(`error while rollback:${error}`);
-              reject(error);
-            } else {
-              //remove old game
-              fs.rmSync(`${worldsDir}/${levelName}`, {
-                recursive: true,
-              });
-              //copy backup version
-              ncp(
-                `${worldsDir}/${backupName}`,
-                `${worldsDir}/${levelName}`,
-
-                (error) => {
-                  if (error) {
-                    console.log(`rollback error:${error}`);
-                    reject(error);
-                  } else {
-                    console.log("rollback success.");
-                    mcProcess = startMinecraftServer();
-                    resolve();
-                  }
-                }
-              );
-            }
-          }
-        );
-      });
-      mcProcess.stdin.write("stop\n");
+    if (!fs.readdirSync(`${worldsDir}`).includes(backupName)) {
+      return reject("存档备份不存在.");
     }
+    mcProcess.on("close", () => {
+      //save current game
+      ncp(
+        `${worldsDir}/${levelName}`,
+        `${worldsDir}/${levelName}.old`,
+        (error) => {
+          if (error) {
+            console.log(`error while rollback:${error}`);
+            reject(error.toString());
+          } else {
+            //remove old game
+            fs.rmSync(`${worldsDir}/${levelName}`, {
+              recursive: true,
+            });
+            //copy backup version
+            ncp(
+              `${worldsDir}/${backupName}`,
+              `${worldsDir}/${levelName}`,
+
+              (error) => {
+                if (error) {
+                  console.log(`rollback error:${error}`);
+                  reject(error.toString());
+                } else {
+                  console.log("rollback success.");
+                  resolve();
+                }
+              }
+            );
+          }
+          mcProcess = startMinecraftServer();
+        }
+      );
+    });
+    mcProcess.stdin.write("stop\n");
   });
 
 // 检查服务器运行状态
