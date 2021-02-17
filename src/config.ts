@@ -2,7 +2,7 @@
 const mcRootPath = "C:/bin/bedrock-server-1.16.201.03";
 
 //可执行文件
-const executable = "bedrock_server.exe";
+const executable = "bedrock_server";
 
 //存档名称
 const levelName = "Bedrock level";
@@ -10,7 +10,7 @@ const levelName = "Bedrock level";
 export const config = {
   mc: {
     cwd: mcRootPath,
-    path: `${mcRootPath}/${executable}`,
+    executable: executable,
     worlds: `${mcRootPath}/worlds`,
     levelName: `${levelName}`,
   },

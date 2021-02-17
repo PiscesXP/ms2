@@ -9,7 +9,7 @@ const { worlds: worldsDir, levelName } = config.mc;
 
 function startMinecraftServer() {
   console.log("starting minecraft server...");
-  const _mcp = spawn(config.mc.path, {
+  const _mcp = spawn(config.mc.executable, {
     detached: true,
     //linux下需要设置工作目录为mc根目录
     cwd: config.mc.cwd,
