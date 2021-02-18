@@ -22,7 +22,6 @@
   "description": "",
   "devDependencies": {
     "@types/cookie-parser": "^1.4.2",
-    "@types/cross-spawn": "^6.0.2",
     "@types/express": "^4.17.11",
     "@types/ncp": "^2.0.4",
     "@types/node": "^14.14.27",
@@ -34,7 +33,6 @@
   },
   "dependencies": {
     "cookie-parser": "^1.4.5",
-    "cross-spawn": "^7.0.3",
     "express": "^4.17.1",
     "ncp": "^2.0.0"
   }
