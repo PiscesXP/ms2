@@ -1,4 +1,4 @@
-import { dateToText } from "../time";
+import * as moment from "moment";
 
 enum IOType {
   stdin = "stdin",
@@ -26,7 +26,7 @@ class IODataPool {
     this.items.push(item);
     //log
     console.log(
-      `[${dateToText(item.time)}][${item.type}] ${item.data.replace(
+      `[${moment(item.time).format("YYYY-MM-DD HH:mm:ss")}][${item.type}] ${item.data.replace(
         /\r?\n/g,
         "\\n"
       )}`
