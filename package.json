@@ -32,6 +32,7 @@
     "webpack-cli": "^4.5.0"
   },
   "dependencies": {
+    "commander": "^7.1.0",
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
     "ncp": "^2.0.0"
