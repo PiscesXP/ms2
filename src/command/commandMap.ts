@@ -1,4 +1,6 @@
 // 后续考虑对命令参数进行验证
+import { drawCircle } from "./circle";
+
 // 设置天气
 let setWeather = (command: string): string[] => ["weather " + command];
 // 设置天气
@@ -19,6 +21,8 @@ commandMap.set("day", setTime);
 commandMap.set("noon", setTime);
 commandMap.set("night", setTime);
 commandMap.set("midnight", setTime);
+// 画圆
+commandMap.set("circle", drawCircle);
 // 不处理
 commandMap.set("fill", defaultFunc);
 commandMap.set("clone", defaultFunc);
