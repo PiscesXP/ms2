@@ -2,17 +2,21 @@
 import { drawCircle } from "./circle";
 import { clean } from "./clean";
 
+export type commandParser = (command: string) => string[];
+
 // 设置天气
-let setWeather = (command: string): string[] => ["weather " + command];
+const setWeather: commandParser = (command) => ["weather " + command];
 // 设置天气
-let setTime = (command: string): string[] => ["time set " + command.split(" ")[0]];
 // 不做任何处理的空白实现
 let defaultFunc = (command: string): string[] => [command];
+const setTime: commandParser = (command) => [
+  "time set " + command.split(" ")[0],
+];
 
 /**
  * 提供命令名与对应的处理方法
  */
-const commandMap = new Map();
+const commandMap = new Map<string, commandParser>();
 // 修改天气
 commandMap.set("clear", setWeather);
 commandMap.set("rain", setWeather);
