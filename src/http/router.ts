@@ -8,6 +8,7 @@ import {
   rollback,
   sendToStdin,
 } from "../minecraft";
+import { parseCommand } from '../command'
 import { formatResponse, ResponseCode } from "./format";
 import { Express } from "express";
 
@@ -74,7 +75,10 @@ export const setupRouters = (server: Express) => {
   server.post("/mc/stdin", (req, res) => {
     const toSend = req?.body?.stdin;
     if (toSend) {
-      sendToStdin(toSend);
+      let arr = parseCommand(toSend);
+      if (arr && arr.length > 0) {
+        sendToStdin(toSend);
+      }
     }
     res.send(formatResponse());
   });

@@ -1,8 +1,8 @@
 import { spawn } from "child_process";
 import { config } from "../config";
-import { dateToText } from "../time";
 import { ncp } from "ncp";
 import * as fs from "fs";
+import * as moment from "moment";
 import { processData, RunningFlag } from "./status";
 
 const { worlds: worldsDir, levelName } = config.mc;
@@ -73,7 +73,7 @@ export const backup = () =>
   new Promise<string>((resolve, reject) => {
     console.log("backup...");
     mcProcess.on("close", () => {
-      const datePostfix = dateToText(new Date()).toString().replace(":", "-");
+      const datePostfix = moment(new Date()).format("YYYY-MM-DD HH:mm:ss").replace(":", "-");
       const backupName = `${levelName}-${datePostfix}`;
 
       ncp(
