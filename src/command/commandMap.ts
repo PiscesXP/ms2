@@ -7,8 +7,6 @@ export type commandParser = (command: string) => string[];
 // 设置天气
 const setWeather: commandParser = (command) => ["weather " + command];
 // 设置天气
-// 不做任何处理的空白实现
-let defaultFunc = (command: string): string[] => [command];
 const setTime: commandParser = (command) => [
   "time set " + command.split(" ")[0],
 ];
@@ -30,10 +28,6 @@ commandMap.set("midnight", setTime);
 commandMap.set("circle", drawCircle);
 // 清扫
 commandMap.set("clean", clean);
-// 不处理
-commandMap.set("fill", defaultFunc);
-commandMap.set("clone", defaultFunc);
-commandMap.set("setblock", defaultFunc);
 
 /**
  * 拆分命令为命令组
@@ -45,5 +39,5 @@ export const parseCommand = (command: string): string[] => {
   if (commandMap.has(arr[0])) {
     return commandMap.get(arr[0])(command);
   }
-  return [];
-}
+  return [command];
+};
