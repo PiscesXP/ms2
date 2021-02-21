@@ -5,7 +5,7 @@ import { commandParser } from "./commandMap";
  * @param radius 半径
  */
 function bresenham(radius: number): number[][] {
-  let pointArray: number[][] = [];
+  const pointArray: number[][] = [];
   let x = 0;
   let y = radius;
   let d = 3 - 2 * radius;
@@ -32,9 +32,9 @@ function bresenham(radius: number): number[][] {
  * @param radius 半径
  */
 function getCircle(x: number, y: number, radius: number): number[][] {
-  let partPoints = bresenham(radius);
+  const partPoints = bresenham(radius);
   // 通过Set去除可能出现的重复点
-  let pointSet = new Set<string>();
+  const pointSet = new Set<string>();
   for (const point of partPoints) {
     pointSet.add(x + point[0] + " " + (y + point[1]));
     pointSet.add(x + point[1] + " " + (y + point[0]));
@@ -53,9 +53,9 @@ function getCircle(x: number, y: number, radius: number): number[][] {
  * @param command
  */
 export const drawCircle: commandParser = (command) => {
-  let arr = command.split(" ");
-  let [, x, y, z, r, block] = arr;
-  let points = getCircle(Number(x), Number(z), Number(r));
+  const arr = command.split(" ");
+  const [, x, y, z, r, block] = arr;
+  const points = getCircle(Number(x), Number(z), Number(r));
   return points.map(
     (p) => `fill ${p[0]} ${y} ${p[1]} ${p[0]} ${y} ${p[1]} ${block}`
   );

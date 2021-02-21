@@ -5,14 +5,14 @@ import { commandParser } from "./commandMap";
  * @param command
  */
 export const clean: commandParser = (command) => {
-  let arr = command.split(" ");
+  const arr = command.split(" ");
   if (arr.length >= 5) {
-    let target = arr[1];
-    let x = Number(arr[2]);
-    let y = Number(arr[3]);
-    let z = Number(arr[4]);
-    let n = Number(arr[5] ?? "10");
-    let h = Number(arr[6] ?? "5");
+    const target = arr[1];
+    const x = Number(arr[2]);
+    const y = Number(arr[3]);
+    const z = Number(arr[4]);
+    const n = Number(arr[5] ?? "10");
+    const h = Number(arr[6] ?? "5");
     if (target === "snow") {
       return [
         `fill ${x + n} ${y + h} ${z + n} ${x - n} ${y - h} ${
