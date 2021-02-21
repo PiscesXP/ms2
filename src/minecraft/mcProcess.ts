@@ -36,8 +36,11 @@ function startMinecraftServer() {
   console.log("minecraft server started");
   processData.runningFlag = RunningFlag.RUNNING;
 
-  //listen Ctrl-C
-  process.on("SIGINT", () => {
+  //listen Ctrl-C and other signals
+  let lock = false;
+  const handleExit = () => {
+    if (lock) return;
+    lock = true;
     if (processData.isRunning()) {
       console.log("stopping mc server...");
       _mcp.on("exit", () => {
@@ -48,7 +51,11 @@ function startMinecraftServer() {
     } else {
       process.exit(0);
     }
-  });
+  };
+
+  process.on("SIGTERM", handleExit);
+  process.on("SIGINT", handleExit);
+  process.on("SIGKILL", handleExit);
   return _mcp;
 }
 
