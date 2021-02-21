@@ -55,7 +55,6 @@ function startMinecraftServer() {
 
   process.on("SIGTERM", handleExit);
   process.on("SIGINT", handleExit);
-  process.on("SIGKILL", handleExit);
   return _mcp;
 }
 
