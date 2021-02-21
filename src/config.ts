@@ -11,7 +11,7 @@ interface OptionTypes {
 }
 
 const defaultValues: OptionTypes = {
-  executable: "bedrock_server",
+  executable: "./bedrock_server",
   port: 23333,
   token: "yourtoken",
   levelName: "Bedrock level",
