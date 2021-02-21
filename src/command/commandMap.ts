@@ -6,7 +6,7 @@ export type commandParser = (command: string) => string[];
 
 // 设置天气
 const setWeather: commandParser = (command) => ["weather " + command];
-// 设置天气
+// 设置时间
 const setTime: commandParser = (command) => [
   "time set " + command.split(" ")[0],
 ];
