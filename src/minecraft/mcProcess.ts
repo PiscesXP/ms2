@@ -79,7 +79,9 @@ export const backup = () =>
   new Promise<string>((resolve, reject) => {
     console.log("backup...");
     mcProcess.on("close", () => {
-      const datePostfix = moment(new Date()).format("YYYY-MM-DD HH:mm:ss").replace(":", "-");
+      const datePostfix = moment(new Date())
+        .format("YYYY-MM-DD HH:mm:ss")
+        .replace(":", "-");
       const backupName = `${levelName}-${datePostfix}`;
 
       ncp(
