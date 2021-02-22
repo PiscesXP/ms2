@@ -26,13 +26,12 @@ function bresenham(radius: number): number[][] {
 }
 
 /**
- * 给定圆心坐标和半径，生成圆的边缘坐标
+ * 将八分之一个圆的坐标扩展为整个圆的坐标
  * @param x
  * @param y
- * @param radius 半径
+ * @param partPoints
  */
-function getCircle(x: number, y: number, radius: number): number[][] {
-  const partPoints = bresenham(radius);
+function buildWhole(x: number, y: number, partPoints: number[][]) {
   // 通过Set去除可能出现的重复点
   const pointSet = new Set<string>();
   for (const point of partPoints) {
@@ -49,14 +48,48 @@ function getCircle(x: number, y: number, radius: number): number[][] {
 }
 
 /**
- * 画圆命令 “circle x y z r block_id”
+ * 给定圆心坐标和半径，生成圆的边缘坐标
+ * @param x
+ * @param y
+ * @param radius 半径
+ */
+function getCircleEdge(x: number, y: number, radius: number): number[][] {
+  return buildWhole(x, y, bresenham(radius));
+}
+
+/**
+ * 给定圆心坐标和半径，生成圆的内部坐标
+ * @param x
+ * @param y
+ * @param radius 半径
+ */
+function getCircleFill(x: number, y: number, radius: number): number[][] {
+  const edgePoints = bresenham(radius);
+  const fillPoints: number[][] = [];
+  for (const p of edgePoints) {
+    for (let i = p[0]; i < p[1]; i++) {
+      fillPoints.push([p[0], i]);
+    }
+  }
+  return buildWhole(x, y, fillPoints);
+}
+
+/**
+ * 画圆命令 “circle x y z r edge_block fill_block”
  * @param command
  */
 export const drawCircle: commandParser = (command) => {
   const arr = command.split(" ");
-  const [, x, y, z, r, block] = arr;
-  const points = getCircle(Number(x), Number(z), Number(r));
-  return points.map(
-    (p) => `fill ${p[0]} ${y} ${p[1]} ${p[0]} ${y} ${p[1]} ${block}`
+  const [, x, y, z, r, edgeBlock, fillBlock] = arr;
+  const edgePoints = getCircleEdge(Number(x), Number(z), Number(r));
+  const result = edgePoints.map(
+    p => `fill ${p[0]} ${y} ${p[1]} ${p[0]} ${y} ${p[1]} ${edgeBlock}`
   );
+  if (fillBlock) {
+    const fillPoints = getCircleFill(Number(x), Number(z), Number(r));
+    result.concat(fillPoints.map(
+      p => `fill ${p[0]} ${y} ${p[1]} ${p[0]} ${y} ${p[1]} ${fillBlock}`
+    ));
+  }
+  return result;
 };

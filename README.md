@@ -21,6 +21,10 @@ Minecraft基岩版管理器 - 后端.
 
 ### 自定义命令
 
+命令格式：`<必填参数> [非必填参数]`
+
+`|`分隔表明参数可填的几个选项
+
 #### 天气命令
 
 `<clear | rain | thunder> [time]`
@@ -35,9 +39,9 @@ Minecraft基岩版管理器 - 后端.
 
 #### 画圆命令
 
-`circle <x y z> <r> <block_id>`
+`circle <x y z> <r> <edge_block> [fill_block]`
 
-以坐标`<x y z>`为圆心，`<r>`为半径，使用`<block_id>`方块画圆
+以坐标`<x y z>`为圆心，`<r>`为半径，使用`edge_block`方块画圆，同时可选择使用`fill_block`方块填充
 
 #### 一键清理命令
 
