@@ -32,10 +32,12 @@
     "webpack-cli": "^4.5.0"
   },
   "dependencies": {
+    "@types/pngjs": "^6.0.0",
     "commander": "^7.1.0",
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
     "moment": "^2.29.1",
-    "ncp": "^2.0.0"
+    "ncp": "^2.0.0",
+    "pngjs": "^6.0.0"
   }
 }
