@@ -84,7 +84,7 @@ export const mapColorConvert = (x: number, y: number, z: number, png: PNG, towar
         result.push(`fill ${position.join(" ")} ${position.join(" ")} stone`);
         position[1] ++;
       }
-      result.push(`fill ${position.join(" ")} ${position.join(" ")} ${color.data} ${color.id}`);
+      result.push(`fill ${position.join(" ")} ${position.join(" ")} ${color.id} ${color.data}`);
     }
   }
   return result;
