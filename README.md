@@ -48,3 +48,13 @@ Minecraft基岩版管理器 - 后端.
 `clean <water | snow> <x y z> [n=10] [h=5]`
 
 清除坐标`<x y z>`四周`n`格，上下`h`格的积雪或水源，`n`和`h`为可选参数
+
+#### 地图像素画绘制命令
+
+`draw <x y z> <north | south | east | west> <url>`
+
+坐标`<x y z>`与图片左上角重合，设置朝向后绘制`url`所示图片
+
+- `url`指向PNG图片
+
+- 个别方块为水源，需至少保留两格高可用空间

@@ -1,4 +1,5 @@
 import { ColorPool } from "./colorPool";
+import {PNG} from "pngjs";
 
 const mapColor = new ColorPool();
 // 数据值参考 https://minecraft-zh.gamepedia.com/地图物品格式
@@ -59,12 +60,12 @@ mapColor.addColor(37, 22, 16, "stained_hardened_clay", 15);
  * @param x
  * @param y
  * @param z
- * @param filePath png图片地址
+ * @param png png图片
  * @param towards 基点为图片左上角，确定朝向
  */
-export const mapColorConvert = (x: number, y: number, z: number, filePath: string, towards?: string) => {
+export const mapColorConvert = (x: number, y: number, z: number, png: PNG, towards: string) => {
   const result = [];
-  const colorArray = mapColor.fitPicture(filePath);
+  const colorArray = mapColor.fitPicture(png);
   for (let i = 0; i < colorArray.length; i++) {
     for (let j = 0; j < colorArray[0].length; j++) {
       const color = colorArray[i][j];

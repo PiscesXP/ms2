@@ -1,6 +1,7 @@
 // 后续考虑对命令参数进行验证
 import { drawCircle } from "./circle";
 import { clean } from "./clean";
+import { drawPicture } from "./draw";
 
 export type commandParser = (command: string) => string[];
 
@@ -26,6 +27,8 @@ commandMap.set("night", setTime);
 commandMap.set("midnight", setTime);
 // 画圆
 commandMap.set("circle", drawCircle);
+// 地图像素画
+commandMap.set("draw", drawPicture);
 // 清扫
 commandMap.set("clean", clean);
 
