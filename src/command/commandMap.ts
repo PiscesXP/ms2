@@ -3,7 +3,7 @@ import { drawCircle } from "./circle";
 import { clean } from "./clean";
 import { drawPicture } from "./draw";
 
-export type commandParser = (command: string) => string[];
+export type commandParser = (command: string) => string[] | Promise<string[]>;
 
 // 设置天气
 const setWeather: commandParser = (command) => ["weather " + command];
@@ -37,7 +37,7 @@ commandMap.set("clean", clean);
  * @param command
  * @return string[]
  */
-export const parseCommand = (command: string): string[] => {
+export const parseCommand: commandParser = (command) => {
   let arr = command.split(" ");
   if (commandMap.has(arr[0])) {
     return commandMap.get(arr[0])(command);

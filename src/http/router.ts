@@ -75,9 +75,13 @@ export const setupRouters = (server: Express) => {
   server.post("/mc/stdin", (req, res) => {
     const rawCommand = req?.body?.stdin;
     if (rawCommand) {
-      const arr = parseCommand(rawCommand);
-      if (arr.length > 0) {
-        sendToStdin(arr.join("\n"));
+      const parser = parseCommand(rawCommand);
+      if (Array.isArray(parser)) {
+        sendToStdin(parser.join("\n"));
+      } else {
+        parser.then((data) => {
+          sendToStdin(data.join("\n"));
+        })
       }
     }
     res.send(formatResponse());
