@@ -4,8 +4,6 @@ import { ConcreteAndStainedClaySchema } from "./ConcreteAndStainedClaySchema";
 import { StainedClaySchema } from "./StainedClaySchema";
 import { ColorSchema } from "./ColorSchema";
 
-export { ColorSchema } from "./ColorSchema";
-
 const defaultSchema = new DefaultSchema();
 const concreteOnlySchema = new ConcreteOnlySchema();
 const concreteAndStainedClaySchema = new ConcreteAndStainedClaySchema();
