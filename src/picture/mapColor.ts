@@ -38,14 +38,10 @@ export const mapColorConvert = (
       }
       if (color.id === "water") {
         position[1]--;
-        result.push(`fill ${position.join(" ")} ${position.join(" ")} stone`);
+        result.push(`setblock ${position.join(" ")} stone`);
         position[1]++;
       }
-      result.push(
-        `fill ${position.join(" ")} ${position.join(" ")} ${color.id} ${
-          color.data
-        }`
-      );
+      result.push(`setblock ${position.join(" ")} ${color.id} ${color.data}`);
     }
   }
   return result;
