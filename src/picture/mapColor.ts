@@ -79,6 +79,9 @@ export const mapColorConvert = (x: number, y: number, z: number, png: PNG, towar
       } else {
         position = [x+j, y, z+i];
       }
+      if (color.id === "air") {
+        continue;
+      }
       if (color.id === "water") {
         position[1] --;
         result.push(`fill ${position.join(" ")} ${position.join(" ")} stone`);

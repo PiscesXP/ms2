@@ -40,20 +40,18 @@ export class ColorPool {
    */
   fitPicture(png: PNG, bgBlock: string = "air"): Color[][] {
     const result: Color[][] = [];
-    png.on("parsed", () => {
-      for (let y = 0; y < png.height; y++) {
-        const line: Color[] = [];
-        for (let x = 0; x < png.width; x++) {
-          const idx = (png.width * y + x) << 2;
-          if (png.data[idx+3] > 250) {
-            line.push(this.chooseColor(png.data[idx], png.data[idx+1], png.data[idx+2]));
-          } else {
-            line.push({r: 0, g: 0, b: 0, id: bgBlock, data: 0})
-          }
+    for (let y = 0; y < png.height; y++) {
+      const line: Color[] = [];
+      for (let x = 0; x < png.width; x++) {
+        const idx = (png.width * y + x) << 2;
+        if (png.data[idx+3] > 250) {
+          line.push(this.chooseColor(png.data[idx], png.data[idx+1], png.data[idx+2]));
+        } else {
+          line.push({r: 0, g: 0, b: 0, id: bgBlock, data: 0})
         }
-        result.push(line);
       }
-    });
+      result.push(line);
+    }
     return result;
   }
 
