@@ -51,9 +51,12 @@ Minecraft基岩版管理器 - 后端.
 
 #### 地图像素画绘制命令
 
-`draw <x y z> <north | south | east | west> <url>`
+`draw <x y z> [<north | south | east | west>] [schema] <url>`
 
 坐标`<x y z>`与图片左上角重合，设置朝向后绘制`url`所示图片
+
+- schema表示选用的颜色方块，可不填。
+目前支持concrete, stainedClay, concreteAndStainedClay。(不区分大小写)
 
 - `url`指向PNG图片
 
