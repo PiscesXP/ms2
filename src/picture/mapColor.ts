@@ -16,7 +16,7 @@ export const mapColorConvert = (
   z: number,
   png: PNG,
   towards: string,
-  colorSchema: string = ""
+  colorSchema: string
 ) => {
   const result = [];
   const colorArray = parseSchema(colorSchema).fitPicture(png);
