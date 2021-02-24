@@ -87,9 +87,10 @@ export const drawCircle: commandParser = (command) => {
   );
   if (fillBlock) {
     const fillPoints = getCircleFill(Number(x), Number(z), Number(r));
-    result = result.concat(fillPoints.map(
+    return result.concat(fillPoints.map(
       p => `fill ${p[0]} ${y} ${p[1]} ${p[0]} ${y} ${p[1]} ${fillBlock}`
     ));
+  } else {
+    return result;
   }
-  return result;
 };
