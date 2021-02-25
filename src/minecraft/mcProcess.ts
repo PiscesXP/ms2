@@ -67,8 +67,48 @@ export const getStdout = () => {
 };
 
 export const sendToStdin = (data: string) => {
-  processData.appendStdin(data);
-  mcProcess.stdin.write(data + "\n");
+  //processData.appendStdin(data);
+  const chunkSize = 65535;
+  if (data.length > chunkSize) {
+    let lastStdout = new Date().getTime();
+    mcProcess.stdout.on("data", () => {
+      lastStdout = new Date().getTime();
+    });
+
+    console.log(`sending by small chunks.`);
+    let begin = 0;
+    const sendMore = (start: number, callback: () => void) => {
+      mcProcess.stdin.write(data.substr(start, chunkSize), callback);
+    };
+    const doSend = () => {
+      if (new Date().getTime() - lastStdout < 10000) {
+        console.log(`waiting stdout data stop...${lastStdout}`);
+        setTimeout(() => {
+          doSend();
+        }, 10000);
+        return;
+      }
+      console.log(`sending from ${begin}...`);
+      setTimeout(() => {
+        sendMore(begin, () => {
+          begin += chunkSize;
+          if (begin < data.length) {
+            doSend();
+          } else {
+            mcProcess.stdin.write("\n");
+          }
+        });
+      }, 2000);
+    };
+    doSend();
+  } else {
+    mcProcess.stdin.write(data + "\n", (error) => {
+      if (error) {
+        console.log(`error while write to stdin:${error.message}`);
+      }
+      console.log(`wrote to stdin! length:${data.length}`);
+    });
+  }
 };
 
 /**
